@@ -1,0 +1,1115 @@
+DROP DATABASE IF EXISTS solution_factory;
+CREATE DATABASE solution_factory ;
+USE solution_factory;
+
+CREATE TABLE prix(
+   id_prix VARCHAR(50),
+   prix VARCHAR(50),
+   PRIMARY KEY(id_prix)
+);
+
+CREATE TABLE difficulte(
+   id_difficulte INT,
+   nom_difficulte VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_difficulte)
+);
+
+CREATE TABLE ingredient(
+   id_ingredient INT,
+   nom_ingredient VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_ingredient)
+);
+
+CREATE TABLE type_de_repas(
+   id_type_de_repas INT,
+   nom_type_de_repas VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_type_de_repas)
+);
+
+CREATE TABLE utilisateur(
+   id_utilisateur INT,
+   sexe CHAR(1) NOT NULL,
+   age INT NOT NULL,
+   poids_souhaite INT NOT NULL,
+   poids_initial INT NOT NULL,
+   prenom_utilisateur VARCHAR(50) NOT NULL,
+   nom_utilisateur VARCHAR(50) NOT NULL,
+   courriel_utilisateur VARCHAR(50) NOT NULL,
+   mot_de_passe VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_utilisateur)
+);
+
+CREATE TABLE specialite_repas(
+   id_specialite INT,
+   nom_specialite VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_specialite)
+);
+
+CREATE TABLE type_ingredient(
+   id_type_aliment INT,
+   type_nom VARCHAR(50),
+   PRIMARY KEY(id_type_aliment)
+);
+
+CREATE TABLE mesure_(
+   id_mesure INT,
+   nom_mesure VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_mesure)
+);
+
+CREATE TABLE jauge_calories(
+   id_calories INT,
+   nom_jauge_calories VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_calories)
+);
+
+CREATE TABLE allergies(
+   id_allergies INT,
+   nom_allergies VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_allergies)
+);
+
+CREATE TABLE recette(
+   id_recette INT,
+   url_image_recette TEXT,
+   nom_recette VARCHAR(50) NOT NULL,
+   nombre_ingredient INT NOT NULL,
+   nombre_personne INT NOT NULL,
+   nombre_temps INT NOT NULL,
+   id_calories INT NOT NULL,
+   id_specialite INT NOT NULL,
+   id_type_de_repas INT NOT NULL,
+   id_difficulte INT NOT NULL,
+   id_prix VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_recette),
+   FOREIGN KEY(id_calories) REFERENCES jauge_calories(id_calories),
+   FOREIGN KEY(id_specialite) REFERENCES specialite_repas(id_specialite),
+   FOREIGN KEY(id_type_de_repas) REFERENCES type_de_repas(id_type_de_repas),
+   FOREIGN KEY(id_difficulte) REFERENCES difficulte(id_difficulte),
+   FOREIGN KEY(id_prix) REFERENCES prix(id_prix)
+);
+
+CREATE TABLE etapes(
+   id_etapes INT,
+   nom_etape TEXT,
+   id_recette INT,
+   PRIMARY KEY(id_etapes),
+   FOREIGN KEY(id_recette) REFERENCES recette(id_recette)
+);
+
+CREATE TABLE recette_ingredient(
+   id_recette INT,
+   id_ingredient INT,
+   id_mesure INT,
+   mesure DECIMAL(15,4) NOT NULL,
+   PRIMARY KEY(id_recette, id_ingredient, id_mesure),
+   FOREIGN KEY(id_recette) REFERENCES recette(id_recette),
+   FOREIGN KEY(id_ingredient) REFERENCES ingredient(id_ingredient),
+   FOREIGN KEY(id_mesure) REFERENCES mesure_(id_mesure)
+);
+
+CREATE TABLE recette_utilisateur(
+   id_recette INT,
+   id_utilisateur INT,
+   favori boolean,
+   PRIMARY KEY(id_recette, id_utilisateur),
+   FOREIGN KEY(id_recette) REFERENCES recette(id_recette),
+   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+);
+
+CREATE TABLE ingredients_type_explication(
+   id_ingredient INT,
+   id_type_aliment INT,
+   PRIMARY KEY(id_ingredient, id_type_aliment),
+   FOREIGN KEY(id_ingredient) REFERENCES ingredient(id_ingredient),
+   FOREIGN KEY(id_type_aliment) REFERENCES type_ingredient(id_type_aliment)
+);
+
+CREATE TABLE utilisateur_allergies(
+   id_utilisateur INT,
+   id_allergies INT,
+   PRIMARY KEY(id_utilisateur, id_allergies),
+   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur),
+   FOREIGN KEY(id_allergies) REFERENCES allergies(id_allergies)
+);
+
+CREATE TABLE ingredient_allergies(
+   id_ingredient INT,
+   id_allergies INT,
+   PRIMARY KEY(id_ingredient, id_allergies),
+   FOREIGN KEY(id_ingredient) REFERENCES ingredient(id_ingredient),
+   FOREIGN KEY(id_allergies) REFERENCES allergies(id_allergies)
+);
+
+
+
+
+insert into prix(id_prix,prix)
+values
+	(1,"bon marché"),
+    (2,"moyen"),
+    (3,"élevé");
+
+insert into difficulte(id_difficulte,nom_difficulte)
+values
+	(1,"facile"),
+    (2,"moyenne"),
+    (3,"difficile");
+
+insert into ingredient(id_ingredient,nom_ingredient)
+values
+	(1,"abricot"),
+    (2,"airelle"),
+    (3,"amande"),
+    (4,"ananas"),
+    (5,"avocat"),
+    (6,"banane"),
+    (7,"cassis"),
+    (8,"cerise"),
+    (9,"chataigne"),
+    (10,"citron"),
+    (11,"clémentine"),
+    (12,"coing"),
+    (13,"datte"),
+    (14,"figue"),
+    (15,"fraise"),
+    (16,"fraise des bois"),
+    (17,"framboise"),
+    (18,"fruit de la passion"),
+    (19,"grenade"),
+    (20,"groseille"),
+    (21,"grosseille à marquereau"),
+    (22,"kaki"),
+    (23,"kiwi"),
+    (24,"kumquat"),
+    (25,"litchi"),
+    (26,"mandarine"),
+    (27,"mangue"),
+    (28,"marron"),
+    (29,"melon"),
+    (30,"mirabelle"),
+    (31,"mûre"),
+    (32,"myrtille"),
+    (33,"nectarine"),
+    (34,"noisette"),
+    (35,"noix"),
+    (36,"orange"),
+    (37,"orange sanguine"),
+    (38,"pamplemousse"),
+    (39,"papaye"),
+    (40,"pastèque"),
+    (41,"pêche"),
+    (42,"poire"),
+    (43,"pomme"),
+    (44,"prune"),
+    (45,"quetsche"),
+    (46,"raisin"),
+    (47,"reine-claude"),
+    (48,"tomate"),
+    (49,"coulis de framboise"),
+    (50,"pistache"),
+    (51,"cacahuète"),
+    (52,"cornichon"),
+    
+	(101,"gousse d'ail"),
+    (102,"artichaut"),
+    (103,"asperge"),
+    (104,"aubergine"),
+    (105,"bette"),
+    (106,"betterave"),
+    (107,"blette"),
+    (108,"brocoli"),
+    (109,"carotte"),
+    (110,"catalonia"),
+    (111,"céleri"),
+    (112,"champignon"),
+    (113,"chou-fleur"),
+    (114,"choux"),
+    (115,"citrouille"),
+    (116,"concombre"),
+    (117,"courge"),
+    (118,"courgette"),
+    (119,"cresson"),
+    (120,"crosne"),
+    (121,"dachine"),
+    (122,"daikon"),
+    (123,"échalote"),
+    (124,"endive"),
+    (125,"épinard"),
+    (126,"fenouil"),
+    (127,"fève"),
+    (128,"flageolet"),
+    (129,"giromon"),
+    (130,"haricot"),
+    (131,"igname"),
+    (132,"laitue"),
+    (133,"lentille"),
+    (134,"mâche"),
+    (135,"maïs"),
+    (136,"manioc"),
+    (137,"navet"),
+    (138,"oignon"),
+    (139,"olive"),
+    (140,"oseille"),
+    (141,"panais"),
+    (142,"patate"),
+    (143,"pâtisson"),
+    (144,"petit pois"),
+    (145,"poireau"),
+    (146,"poivron vert"),
+    (147,"pomme de terre"),
+    (148,"potimarron"),
+    (149,"potiron"),
+    (150,"radis"),
+    (151,"rhubarbe"),
+    (152,"roquette"),
+    (153,"rutabaga"),
+    (154,"salade"),
+    (155,"salsifi"),
+    (156,"salsifis"),
+    (157,"poivron rouge"),
+    (158,"pot d'olives"),
+    (159,"boite de champignong"),
+    
+    (201,"anchois"),
+    (202,"araignée de mer"),
+    (203,"bar"),
+    (204,"barramundi"),
+    (205,"baudroie"),
+    (206,"bigorneau"),
+    (207,"bulot"),
+    (208,"cabillaud"),
+    (209,"calamar"),
+    (210,"carpe"),
+    (211,"carrelet"),
+    (212,"chinchard"),
+    (213,"cigale de mer"),
+    (214,"colin"),
+    (215,"congre"),
+    (216,"coque"),
+    (217,"coquille Saint-Jacques"),
+    (218,"couteaux"),
+    (219,"crabe"),
+    (220,"crevette rose"),
+    (221,"crevette grise"),
+    (222,"dorade roayle"),
+    (223,"dorade astral"),
+    (224,"écrevisse"),
+    (225,"eglefin"),
+    (226,"empereur"),
+    (227,"espadon"),
+    (228,"féra"),
+    (229,"flet"),
+    (230,"flétan"),
+    (231,"flétan noir"),
+    (232,"gambas"),
+    (233,"grondin"),
+    (234,"hareng"),
+    (235,"homard"),
+    (236,"huître"),
+    (237,"langouste"),
+    (238,"langoustine"),
+    (239,"lieu"),
+    (240,"limande"),
+    (241,"lingue"),
+    (242,"lotte"),
+    (243,"loup de mer"),
+    (244,"maigre"),
+    (245,"maquereau"),
+    (246,"merlan"),
+    (247,"merlu"),
+    (248,"mérou"),
+	(249,"morue"),
+    (250,"moule"),
+    (251,"oeuf lompe"),
+    (252,"pagre"),
+    (253,"palourde"),
+    (254,"perche"),
+    (255,"poulpe"),
+    (256,"requin"),
+    (257,"rouget-barbet"),
+    (258,"saint-pierre"),
+    (259,"saumon"),
+    (260,"seiche"),
+    (261,"sole"),
+    (262,"thon blanc"),
+    (263,"thon rouge"),
+    (264,"tourteau"),
+    (265,"truite"),
+    (266,"turbot"),
+    (267,"boite de thon"),
+    (268,"poisson"),
+    (269,"poisson blanc"),
+    
+    (301,"épaule d'agneau"),
+    (302,"boeuf"),
+    (303,"taureau"),
+    (304,"chèvre"),
+    (305,"mouton"),
+    (306,"cheval"),
+    (307,"cochon"),
+    (308,"veau de lait"),
+    (309,"lapin"),
+    (310,"volaille"),
+    (311,"lièvre"),
+    (312,"chevreuil"),
+    (313,"sanglier"),
+    (314,"faisan"),
+    (315,"cerf"),
+    (316,"voilaille sauvage"),
+    (317,"jambon"),
+    (318,"faisan"),
+    (319,"chipolata"),
+    (320,"merguez"),
+    (321,"chorizo"),
+    (322,"poulet"),
+    (323,"blanquette de veau"),
+    (324,"gigot d'agneau"),
+    (325,"steak haché"),
+    (326,"saut de veau"),
+    
+    (401,"boulgour"),
+    (402,"céréale"),
+    (403,"chapelure"),
+    (404,"ebly"),
+    (405,"épeautre"),
+    (406,"farine"),
+    (407,"feuille de brick"),
+    (408,"feuille filo"),
+    (409,"fèves"),
+    (410,"flocons d'avoine"),
+    (411,"Flocons d'épeautre"),
+    (412,"gnocchi"),
+    (413,"haricots blancs"),
+    (414,"haricots mungo"),
+    (415,"haricots rouges"),
+    (416,"lentilles"),
+    (417,"maîs"),
+    (418,"orge"),
+    (419,"pain"),
+    (420,"panais"),
+    (421,"patate douce"),
+    (422,"pâte à pizza"),
+    (423,"pâtes"),
+    (424,"pois cassés"),
+    (425,"pois chiches"),
+    (426,"polenta"),
+    (427,"pomme de terre"),
+    (428,"quinoa"),
+    (429,"riz"),
+    (430,"sarasin"),
+    (431,"semoule"),
+    (432,"son d'avoine"),
+    (433,"son de blé"),
+    (434,"tapioca"),
+    (435,"topinambour"),
+    (436,"Tortilla mexicaine "),
+    (437,"Vermicelle"),
+    (438,"pâte feuilletée"),
+    (439,"nouilles de riz"),
+    (440,"paquet de gressins natures lisses"),
+    (441,"purée de pomme de terre"),
+    (442,"baguette"),
+   
+	(501,"beurre doux"),
+    (502,"beurre salé"),
+    (503,"camembert"),
+    (504,"crème fraiche"),
+    (505,"fromage blanc"),
+    (506,"fromage de chèvre"),
+    (507,"gruyère"),
+    (508,"lait cru"),
+    (509,"lait demi-écrémé"),
+    (510,"lait écrémé"),
+    (511,"lait entier"),
+    (512,"mascarpone"),
+    (513,"mozzarella"),
+    (514,"oeuf de caille"),
+    (515,"oeuf"),
+    (516,"roquefort"),
+    (517,"vacherin"),
+    (518,"yaourt nature"),
+    (519,"cheddar"),
+    (520,"rouleau de pâte brisée"),
+    (521,"crème allégée"),
+    (522,"lait"),
+    (523,"parmesan"),
+    (524,"beurre fondu"),
+    (525,"lait de soja"),
+    (526,"crème liquideé"),
+    (527,"fromage frais"),
+    (528,"fromage"),
+    (529,"lait de coco"),
+    (530,"fromage rapé"),
+    (531,"yaourt"),
+    (532,"jaune d'oeuf"),
+    
+    
+    (601,"bière"),
+    (602,"café"),
+    (603,"eau"),
+    (604,"jus d'orange"),
+    (605,"sodas"),
+    (606,"thé"),
+    (607,"vin"),
+    (608,"vodka"),
+    (609,"jus de citron"),
+    (610,"kirsch"),
+    (611,"rhum"),
+    (612,"eau de rose"),
+    (613,"vin blanc"),
+    (614,"vin rosé"),
+
+    (701,"huile d'arachide"),
+    (702,"huile d'argan"),
+    (703,"huile de canola"),
+    (704,"huile de colza"),
+    (705,"huile de coprah"),
+    (706,"huile de lin"),
+    (707,"huile de maïs"),
+    (708,"huile de noix"),
+    (709,"huile d'olive vierge"),
+    (710,"huile de palme"),
+    (711,"huile de ricin"),
+    (712,"huile de sésame"),
+    (713,"huile de tournesol"),
+    (714,"vinaigre"),
+    (715,"vinaigre balsamaique"),
+    
+    (801,"badiane"),
+    (802,"baies roses"),
+    (803,"cannelle"),
+    (804,"cardamone"),
+    (805,"coriande"),
+    (806,"cumin"),
+    (807,"curcuma"),
+    (808,"curry"),
+    (809,"fève de Tonka"),
+    (810,"gingembre"),
+    (811,"ketchup"),
+    (812,"laurier"),
+    (813,"macis"),
+    (814,"maniguette"),
+    (815,"mayonnaise"),
+    (816,"paprika"),
+    (817,"piment"),
+    (818,"poivre"),
+    (819,"safran"),
+    (820,"sauce barbecue"),
+    (821,"sauce soja"),
+    (822,"sel"),
+    (823,"sucre blanc"),
+    (824,"sucre roux"),
+    (825,"sumac"),
+    (826,"tabasco"),
+    (827,"thym"),
+    (828,"viandox"),
+    (829,"herbes de provence"),
+    (830,"menthe fraiche"),
+    (831," piment d'Espelette"),
+    (832,"ciboulette"),
+    (833,"gros sel"),
+    (834,"bouillon"),
+    (835,"persil"),
+    (836,"épices à coucous"),
+    (837,"concentré de tomates"),
+    (838,"sucre glace"),
+    (839,"vanille"),
+    (840,"levure"),
+    (841,"chocolat"),
+    (842,"origan"),
+    (843,"moutarde"),
+    (844,"badiane"),
+    (845,"sauce nuoc mam"),
+    (846,"cassonade"),
+    (847,"sucre vanillé"),
+    (848,"bicarbonate"),
+    (849,"vanille alimentaire"),
+    (850,"gélatine"),
+    (851,"colorant alimentaire"),
+    (852,"basilic"),
+    (853,"bouquet garni"),
+    (854,"morceau de sucre"),
+    (855,"pignon de pain"),
+    (856,"herbe de provence"),
+    (857,"cerfeuil"),
+    (858,"chocolat blanc"),
+    (859,"gousse de vanille"),
+    (860,"chocolat en poudre");
+    
+insert into type_de_repas(id_type_de_repas,nom_type_de_repas)
+values
+	(1,"entré"),
+    (2,"plat"),
+    (3,"dessert"),
+    (4,"fromage"),
+    (5,"apéritif"),
+    (6,"boisson");
+
+insert into utilisateur(id_utilisateur,prenom_utilisateur,nom_utilisateur,courriel_utilisateur,mot_de_passe,age,sexe,poids_initial,poids_souhaite)
+values
+	(1,"Nicolas","Glab","nicolas.glab@efrei.net","moselle52","84","M",54,52);
+    
+    
+insert into specialite_repas(id_specialite,nom_specialite)
+values
+	(1,"végétarien"),
+    (2,"végétalien"),
+    (3,"omnivore");
+    
+
+insert into type_ingredient(id_type_aliment,type_nom)
+values
+	(1,"fruits"),
+    (2,"légumes"),
+    (3,"poissons/crustacés"),
+    (4,"viandes"),
+    (5,"féculents"),
+    (6,"produits laitiers/oeufs"),
+    (7,"boissons"),
+    (8,"huile"),
+    (9,"assaisonnements/condiments");
+
+
+    
+insert into mesure_(id_mesure,nom_mesure)
+values
+	(0,""),
+	(1,"L"),
+    (2,"g"),
+    (3,"Kg"),
+    (4,"Cuillère à soupe(s)"),
+    (5,"Cuillère à café(s)"),
+    (6,"cL"),
+    (7,"pincée(s)"),
+    (8,"filet(s)"),
+    (9,"pot(s)"),
+    (10,"boîte(s)"),
+    (11,"bouquet(s)"),
+    (12,"tranche(s)"),
+    (13,"sachet(s)"),
+    (14,"tablette(s)"),
+    (15,"briquettes"),
+    (16,"cubes"),
+    (17,"goutte(s)"),
+    (18,"feuille(s)"),
+    (19,"étoile(s)");
+    
+insert into jauge_calories(id_calories,nom_jauge_calories)
+values
+	(1,"peu calorique"),
+    (2,"calorique"),
+    (3,"régime"),
+    (4,"très calorique");
+	
+
+insert into recette(id_recette,nom_recette,url_image_recette,id_specialite,id_type_de_repas,id_difficulte,id_prix,nombre_ingredient,id_calories,nombre_personne,nombre_temps)
+values
+	(1,"Salade de concombre au yaourt","https://assets.afcdn.com/recipe/20190215/87825_w1200h1800c1cx2489cy2415cxb3647cyb5468.webp",1,1,1,1,7,1,3,10),
+    (2,"Plat d'été Courgettes/aubergines/tomates","https://assets.afcdn.com/recipe/20160811/20398_w1200h1600c1cx1224cy1632.webp",2,2,1,1,13,1,4,30),
+    (3,"Guacamole de petits-pois","https://assets.afcdn.com/recipe/20210212/117930_w1200h1800c1cx909cy1255cxb1414cyb1969.webp",2,5,1,1,7,1,6,5),
+    (4,"Mystère chèvre carotte","https://assets.afcdn.com/recipe/20220407/130784_w1200h1800cx600cy900cxb1200cyb1800.webp",1,5,1,1,8,2,6,25),
+    (5,"Tatin de mangue parfumée au gingembre","https://assets.afcdn.com/recipe/20161118/43949_w1024h778c1cx2592cy1728.webp",1,3,1,2,5,2,4,30),
+    (6,"Navarin d'agneau","https://assets.afcdn.com/recipe/20200220/107926_w1200h800c1cx3553cy2061cxb5184cyb3456.webp",1,1,1,2,14,2,4,140),   
+	(7,"Conut","https://assets.afcdn.com/recipe/20160729/38960_w1200h1800c1cx2000cy3000.webp",1,3,1,1,7,2,6,40),
+    (8,"Riz Pilaf","https://assets.afcdn.com/recipe/20181017/82833_w1200h1600c1cx1944cy2592cxb3888cyb5184.webp",1,2,1,2,5,1,4,40),
+    (9,"Cake salé au jambon olive","https://assets.afcdn.com/recipe/20130206/48875_w1200h1388c1cx862cy997.webp",3,2,1,2,8,2,6,65),
+    (10,"Petit framboisier","https://assets.afcdn.com/recipe/20130704/34187_w1200h1800c1cx1250cy1875.webp",1,3,1,2,11,2,4,35),
+    (11,"Moelleux au chocolat","https://assets.afcdn.com/recipe/20170201/63676_w1200h800c1cx3000cy2000.webp",1,3,1,1,6,2,6,40),
+    (12,"Brochette de croque M. Panée","https://assets.afcdn.com/recipe/20170626/69384_w1200h1800c1cx2000cy3000.webp",3,1,1,1,6,2,2,20),
+    (13,"Pizza au saumon","https://assets.afcdn.com/recipe/20150410/39392_w1200h1800c1cx1250cy1875.webp",3,2,1,1,7,2,6,35),
+    (14,"Crêpe au chocolat","https://assets.afcdn.com/recipe/20170106/11490_w1200h800c1cx3000cy2000.webp",1,3,1,1,8,2,15,30),
+    (15,"Salade césar au poulet light","https://assets.afcdn.com/recipe/20130621/54428_w1200h1701c1cx944cy1338.webp",3,1,1,1,5,3,4,30),
+    (16,"Cookie shots","https://assets.afcdn.com/recipe/20170415/58798_w1200h1070c1cx1029cy918.webp",1,3,1,1,8,2,15,30),
+    (17,"Soupe Pho","https://assets.afcdn.com/recipe/20151009/60436_w1200h1690c1cx1000cy1408.webp",3,2,1,2,10,2,4,27),
+    (18,"Crumble à la rhubarbe","https://assets.afcdn.com/recipe/20200928/114429_w1200h1709c1cx540cy769cxb1080cyb1538.webp",1,3,1,1,6,2,4,45),
+    (19,"ChakChouka","https://assets.afcdn.com/recipe/20160729/24961_w1200h1800c1cx2000cy3000.webp",3,2,1,1,8,2,2,65),
+    (20,"Cupcakes faciles","https://assets.afcdn.com/recipe/20181017/82820_w1200h1600c1cx1819cy2425cxb3638cyb4851.webp",1,3,1,1,11,2,9,45),
+    (21,"Panna cotta et gelée à la rose","https://assets.afcdn.com/recipe/20160425/23092_w1200h1800c1cx1895cy2843.webp",1,3,1,2,4,2,6,25),
+    (22,"Cake au yaourt","https://assets.afcdn.com/recipe/20200218/107839_w1200h675c1cx960cy540cxb1920cyb1080.webp",1,3,1,1,9,2,6,45),
+    (23,"Quiche au thon","https://assets.afcdn.com/recipe/20160404/43030_w1200h800c1cx1244cy829.webp",1,2,1,1,9,2,6,30),
+    (24,"Sauté de veau au chorizo","https://assets.afcdn.com/recipe/20130122/35196_w420h560c1cx192cy256.webp",3,2,1,1,9,2,6,140),
+    (25,"Thé à la menthe","https://assets.afcdn.com/recipe/20200504/110609_w1200h675c1cx960cy540cxb1920cyb1080.webp",1,6,1,1,3,3,4,20),
+    (26,"Coulis de fraises","https://assets.afcdn.com/recipe/20220324/130290_w1200h1612c1cx747cy1003cxb1494cyb2007.webp",2,6,1,1,4,2,4,5),
+    (27,"Smoothie vitaminé","https://assets.afcdn.com/recipe/20150204/46028_w1200h1605c1cx1250cy1672.webp",2,6,1,1,4,2,2,10),
+    (28,"Pancakes","https://assets.afcdn.com/recipe/20211222/126211_w1200h801c1cx1075cy827cxb2119cyb1415.webp",1,3,1,1,6,2,2,15),
+    (29,"Poulet Basquaise","https://assets.afcdn.com/recipe/20200702/112439_w1200h1800c1cx1920cy2880cxb3840cyb5760.webp",3,2,1,1,12,2,6,55),
+    (30,"Fondant au chocolat délicieux","https://assets.afcdn.com/recipe/20220421/131347_w1200h802c1cx2120cy1416cxb4240cyb2832.webp",1,3,1,1,5,2,6,45),
+    (31,"Blanquette de veau facile","https://assets.afcdn.com/recipe/20190529/93191_w1200h800c1cx4330cy2886cxb8660cyb5773.webp",3,2,1,2,13,2,4,135),
+    (32,"Fraise au mascarpone","https://assets.afcdn.com/recipe/20220519/132102_w1200h802c1cx2120cy1416cxb4240cyb2832.webp",1,3,1,1,4,2,4,15),
+    (33,"Gressins mikados salés de l'apéro","https://assets.afcdn.com/recipe/20170315/14380_w1024h778c1cx1872cy2808.webp",1,5,1,1,6,1,6,5),
+    (34,"Chips de carotte","https://assets.afcdn.com/recipe/20160322/3409_w1024h778c1cx3680cy2456.webp",2,5,1,1,6,1,6,15),
+    (35,"Oeuf de caille pané aux pignons de pin","https://assets.afcdn.com/recipe/20140226/34760_w1024h778c1cx320cy213.webp",2,5,1,2,5,1,18,19),
+    (36,"Kebab d'agneau","https://assets.afcdn.com/recipe/20170821/71243_w1200h1800c1cxb4000cyb6000.webp",3,2,1,1,8,4,4,21),
+    (37,"French Tacos","https://assets.afcdn.com/recipe/20220421/131352_w1200h802c1cx2120cy1416cxb4240cyb2832.webp",3,2,1,1,9,4,5,80),
+    (38,"Blanquette de poisson","https://assets.afcdn.com/recipe/20200518/111372_w1200h1800c1cx1882cy2823cxb3764cyb5646.webp",3,2,1,1,9,1,4,40),
+    (39,"Filets de poissons à la moutarde","https://assets.afcdn.com/recipe/20141010/57420_w768h583c1cx2000cy1500.webp",3,2,1,1,6,1,3,7),
+    (40,"Poisson au lait de coco","https://assets.afcdn.com/recipe/20130810/28814_w768h583c1cx1296cy968.webp",3,2,1,1,5,1,4,50),
+    (41,"Filets de poisson au four aux petits légumes","https://assets.afcdn.com/recipe/20120503/31486_w768h583c1cx958cy1437.webp",3,2,1,1,9,1,4,55),
+    (42,"Brochettes de poissons marinés et grillés","https://assets.afcdn.com/recipe/20130722/34889_w768h583c1cx1764cy2128.webp",3,2,1,2,7,1,4,41),
+    (43,"Filets de poissons blancs sur leur lit de poivrons","https://assets.afcdn.com/recipe/20200419/109799_w768h583c1cx1024cy768cxb2048cyb1536.webp",3,2,1,1,9,1,4,35),
+    (44,"Curry de poisson et riz parfumé","https://assets.afcdn.com/recipe/20160214/32352_w768h583c1cx698cy523.webp",3,2,1,2,12,1,4,20),
+    (45,"Parmentier de poisson rapide","https://assets.afcdn.com/recipe/20130617/48653_w768h583c1cx256cy192.webp",3,2,1,1,7,1,4,50),
+    (46,"Poisson léger aux poireaux","https://assets.afcdn.com/recipe/20141201/14606_w768h583c1cx1632cy1224.webp",3,2,1,1,9,1,1,45),
+    (47,"Gâteau au yaourt peu calorique","https://assets.afcdn.com/recipe/20100120/10344_w768h583c1cx192cy256.webp",1,3,1,1,7,1,6,50),
+    (48,"Gâteau de pain perdu jambon mozzarella","https://assets.afcdn.com/recipe/20170113/30207_w1200h1800c1cx2000cy3000.webp",3,3,1,1,10,1,4,45),
+    (49,"Sauté de veau au chorizo","https://assets.afcdn.com/recipe/20130122/35196_w420h560c1cx192cy256.webp",3,2,1,1,9,2,6,80),
+    (50,"Muffins tout chocolat au coeur blanc","https://assets.afcdn.com/recipe/20160830/21165_w1200h1800c1cx2000cy3000.webp",1,3,1,1,10,2,20,30);
+    
+    
+insert into recette_ingredient(id_recette,id_ingredient,mesure,id_mesure)
+values
+	(1,609,0,0),(1,829,0,0),(1,818,0,0),(1,822,0,0),(1,116,1,0),(1,518,1,0),(1,146,1/2,0),
+    (2,104,1,0),(2,118,2,0),(2,48,3,0),(2,138,1,0),(2,808,0,0),(2,806,0,0),(2,816,0,0),(2,817,0,0),(2,829,0,0),(2,818,0,0),(2,822,0,0),(2,709,0,0),(2,521,2,4),
+    (3,609,1/2,0),(3,709,0,0),(3,831,0,0),(3,822,0,0),(3,818,0,0),(3,144,250,2),(3,830,0,0),
+    (4,109,150,2),(4,808,1,5),(4,34,170,2),(4,805,0,0),(4,818,0,0),(4,506,400,2),(4,519,150,2),(4,832,0,0),
+    (5,520,1,0),(5,824,50,2),(5,810,0,0),(5,27,2,0),(5,502,50,2),
+    (6,109,8,0),(6,138,12,0),(6,427,10,0),(6,101,8,0),(6,834,1/2,1),(6,833,3,5),(6,829,1,0),(6,406,1,4),(6,709,3,4),(6,835,1,11),(6,836,0,0),(6,301,1,3),(6,137,8,0),(6,837,75,2),
+    (7,10,1/2,0),(7,838,3,4),(7,522,50,6),(7,406,50,2),(7,823,100,2),(7,859,1,0),(7,515,2,0),(7,438,1,0),
+    (8,429,250,2),(8,501,40,2),(8,834,50,6),(8,818,0,0),(8,822,0,0),
+    (9,406,150,2),(9,507,75,2),(9,522,10,6),(9,840,1,0),(9,709,1,4),(9,317,100,2),(9,139,150,2),(9,515,4,0),
+    (10,838,1,4),(10,3,50,2),(10,17,250,2),(10,49,100,2),(10,610,1,4),(10,504,20,6),(10,823,60,2),(10,406,60,2),(10,840,1/2,0),(10,501,30,2),(10,515,3,0),
+    (11,406,125,2),(11,501,125,2),(11,823,250,2),(11,841,200,2),(11,840,1/2,0),(11,515,4,0),
+    (12,419,8,12),(12,513,1,0),(12,501,30,2),(12,317,4,12),(12,403,80,2),(12,515,1,0),
+    (13,513,2,0),(13,842,0,0),(13,709,2,4),(13,10,0.5,0),(13,423,1,0),(13,259,6,12),(13,504,0,0),
+    (14,406,250,2),(14,522,50,6),(14,822,1,5),(14,823,1,4),(14,709,2,4),(14,860,4,4),(14,611,2,4),(14,515,3,0),
+    (15,504,4,4),(15,10,1,0),(15,843,1,4),(15,523,20,2),(15,714,0,0),
+    (16,823,125,2),(16,406,180,2),(16,840,0.5,0),(16,841,100,2),(16,501,125,2),(16,515,1,0),
+    (17,810,1,0),(17,805,1,11),(17,834,150,6),(17,844,1,19),(17,845,0,0),(17,302,400,2),(17,10,1,0),(17,817,1,0),(17,832,1,11),(17,439,400,2),
+    (18,43,1,0),(18,501,90,2),(18,406,125,2),(18,846,60,2),(18,847,1,0),(18,151,500,2),
+    (19,48,2,0),(19,146,2,0),(19,138,2,0),(19,515,2,0),(19,320,4,0),(19,709,0,0),(19,805,0,0),(19,817,1,0),
+    (20,501,100,2),(20,838,200,2),(20,522,6,4),(20,406,140,2),(20,524,120,2),(20,823,120,2),(20,840,0.5,13),(20,848,1,5),(20,849,1,5),(20,515,2,0),
+    (21,850,6,18),(21,823,50,2),(21,612,2,4),(21,851,2,17),
+    (22,823,500,2),(22,406,2.8,9),(22,709,0.5,0),(22,847,1,13),(22,840,1,13),(22,611,1,4),(22,518,1,0),(22,515,2,0),
+    (23,48,2,0),(23,504,0.5,0),(23,843,0,0),(23,818,0,0),(23,822,0,0),(23,438,1,0),(23,267,1,10),(23,507,0,0),(23,515,4,0),
+    (24,321,1,0),(24,138,4,0),(24,852,1,0),(24,853,1,0),(24,101,1,0),(24,709,2,4),(24,308,1,3),(24,48,2,10),(24,158,1,9),
+    (25,606,2,5),(25,854,25,0),(25,830,1,0),
+    (26,15,250,2),(26,10,0.5,0),(26,823,50,2),(26,603,10,6),
+    (27,525,25,6),(27,6,2,0),(27,36,2,0),(27,23,4,0),
+    (28,823,1,4),(28,709,1,4),(28,406,150,2),(28,840,1,5),(28,522,20,6),(28,515,1,0),
+    (29,48,6,0),(29,138,1,0),(29,146,2,0),(29,709,0,0),(29,101,0,0),(29,827,0,0),(29,835,0,0),(29,818,0,0),(29,822,0,0),(29,322,1,0),(29,817,10,0),(29,812,0,0),
+    (30,841,300,2),(30,524,250,2),(30,823,250,2),(30,406,2,5),(30,515,5,0),
+    (31,834,2,16),(31,109,2,0),(31,138,1,0),(31,159,1,10),(31,504,1,9),(31,10,1,0),(31,406,2,4),(31,613,25,6),(31,822,0,0),(31,818,0,0),(31,323,1,3),(32,515,1,0),
+    (32,15,500,2),(32,847,2,13),(32,512,1,9),(32,526,1,15),
+    (33,50,3,4),(33,818,0,0),(33,440,1,0),(33,527,120,2),(33,51,3,4),(33,832,0,0),
+    (34,109,3,0),(34,715,1,4),(34,805,0,0),(34,806,1,7),(34,818,0,0),(34,822,0,0),
+    (35,855,100,2),(35,833,1,7),(35,707,1,8),(35,514,18,0),(35,403,100,2),
+    (36,138,1,0),(36,816,1,5),(36,806,1,5),(36,835,2,4),(36,709,6,6),(36,818,0,0),(36,822,0,0),(36,324,750,2),
+    (37,427,5,0),(37,504,50,6),(37,822,0,0),(37,818,0,0),(37,713,0,0),(37,436,10,0),(37,820,0,0),(37,325,3,0),(37,528,100,2),
+    (38,112,400,2),(38,138,1,0),(38,613,15,6),(38,818,0,0),(38,822,0,0),(38,853,0,0),(38,406,0,0),(38,208,600,2),(38,504,15,6),
+    (39,843,2,4),(39,818,0,0),(39,822,0,0),(39,268,6,8),(39,504,2,4),(39,52,1,4),
+    (40,48,4,0),(40,138,1,0),(40,807,0,0),(40,269,4,8),(40,529,1,10),
+    (41,11,200,2),(41,145,150,2),(41,504,5,6),(41,501,80,2),(41,10,1,0),(41,709,0,0),(41,818,0,0),(41,822,0,0),(41,268,4,8),
+    (42,504,250,2),(42,101,2,0),(42,819,1,0),(42,817,0.5,0),(42,818,0,0),(42,10,2,0),
+    (43,138,1,0),(43,709,0,0),(43,504,3,4),(43,613,15,6),(43,856,0,0),(43,818,0,0),(43,822,0,0),(43,269,4,8),(43,146,1,0),
+    (44,138,1,0),(44,101,2,0),(44,810,1,5),(44,808,1,5),(44,10,0.5,0),(44,709,0,0),(44,818,0,0),(44,822,0,0),(44,269,4,8),(44,821,2,4),(44,529,4,4),
+    (45,138,2,0),(45,406,1,4),(45,522,20,6),(45,441,500,2),(45,501,10,2),(45,530,50,2),(45,268,4,8),
+    (46,145,2,0),(46,709,0,0),(46,818,0,0),(46,822,0,0),(46,808,0,0),(46,269,1,8),(46,123,1,0),(46,521,10,6),(46,406,0,0),
+    (47,709,0,0),(47,406,3,9),(47,847,1,13),(47,840,1,13),(47,531,1,0),(47,515,2,0),
+    (48,513,3,0),(48,522,30,6),(48,835,1,4),(48,818,0,0),(48,822,0,0),(48,442,0.5,0),(48,317,3,12),(48,526,20,6),(48,515,2,0),(48,857,1,4),
+    (49,321,1,0),(49,138,4,0),(49,852,1,11),(49,853,1,0),(49,101,1,0),(49,709,2,4),(49,326,1,3),(49,48,2,10),(49,139,1,0),
+    (50,406,280,2),(50,501,100,2),(50,823,100,2),(50,522,10,6),(50,847,1,13),(50,840,0.5,0),(50,822,1,7),(50,858,1,14),(50,515,2,0),(50,841,3,5);
+    
+        
+    
+insert into recette_utilisateur(id_utilisateur,id_recette,favori)
+values
+	(1,1,True);
+
+insert into etapes (id_recette,id_etapes,nom_etape)
+values
+	(1,1,"Laver et éplucher le concombre, le couper en rondelles et le laisser égoutter avec un peu de sel."),
+    (1,2,"Laver le poivron et le couper en petits dés."),
+    (1,3,"Dans un saladier : verser le yaourt, poivrer, citronner, et ajouter quelques herbes de Provence (ne pas hésiter à goûter la sauce pour vérifier l'assaisonnement)"),
+    (1,4,"Mélanger le tout avec le concombre et le poivron."),
+    
+    (2,5,"En premier lieu, éplucher les courgettes et les découper en petits dés. Faire de même avec l'aubergine et les tomates (on peut enlever la peau ou pas)."),
+    (2,6,"Faire revenir l'oignon émincé dans une cuillère à soupe d'huile d'olive. Quand il devient transparent, verser les courgettes et les aubergines. Remuer pour bien mélanger les ingrédients. Laisser cuire à feu moyen, couvert, 3-4 minutes, puis ajouter les tomates et remuer à nouveau. Laisser cuire encore 5 minutes environ puis ajouter le sel, le poivre et les épices (à doser selon les goûts). Bien remuer. Laisser cuire à découvert pendant encore 5 à 10 minutes à feu moyen, en remuant de temps en temps."),
+    (2,7,"En fin de cuisson, rajouter la crème et bien remuer pour la faire s'incorporer au reste de la préparation."),
+    (2,8,"Ajuster le sel, poivre et épices et servir."),
+    (2,9,"Et voilà."),
+    
+    (3,10,"Ciselez la menthe, mixez les petits-pois avec le jus de citron, la menthe et le sel et le poivre."),
+    (3,11,"Disposez dans des petits bols ou des ramequins et ajoutez une pincée de piment d’Espelette."),
+    
+    (4,12,"Râper les carottes. Et le cheddar."),
+    (4,13,"Ecraser le chèvre frais à la fourchette . Ajouter les carottes."),
+    (4,14,"Mélanger avec le cheddar râpé. Le curry et le poivre. Bien mélanger."),
+    (4,15,"Former une boulette avec la préparation, l'envelopper dans du film alimentaire et réserver au frais 1h."),
+    (4,16,"Concasser grossièrement les noisettes.Ciseler la ciboulette et la coriandre."),
+    (4,17,"Déballer la boule de fromage, la rouler dans les noisettes concassées et parsemer d'herbes ciselées."),
+    (4,18,"Envelopper de nouveau dans du film alimentaire et réserver au frais jusqu'au moment de servir."),
+    
+    (5,19,"Découper la pâte aux mesures du moule en ajoutant 5 cm tout autour, puis mettre au réfrigérateur."),
+    (5,20,"Eplucher et râper 3 cuillères à café de gingembre. Préchauffer le four à 180°C (thermostat 6)"),
+    (5,21,"Faire fondre le beurre et le gingembre, ajouter le sucre et cuire doucement (5 min) afin d'obtenir un caramel mousseux. Verser le caramel sur le fond du moule et les bords."),
+    (5,22,"Eplucher et couper les mangues en quartiers."),
+    (5,23,"Tapisser le moule avec les quartiers de mangue, saupoudrer d'un peu de sucre, puis recouvrir avec la pâte bien froide (rentrer les bords sur les côtés)."),
+    (5,24,"Enfourner 20 min à 180°C, et servir tiède."),
+    
+    (6,25,"Faire revenir l'agneau dans une sauteuse dans 2 cuillères d'huile d’olive, ajouter des épices couscous et un peu de sel."),
+    (6,26,"Quand les morceaux sont dorés, ajouter l’ail écrasé et le concentré de tomates."),
+    (6,27,"Retirer la viande et la réserver, faire dorer la farine dans le jus et ajouter le bouillon chaud en le fouettant."),
+    (6,28,"Mettre la viande dans cette sauce, qui ne doit pas être trop liquide, en ajoutant le bouquet garni. Faire cuire à feu doux, au four ou dans une cocotte."),
+    (6,29,"Au bout de 3/4 d’heure, couper les carottes et les navets en deux, les faire sauter avec les oignons dans 1 cuillère d’huile d’olive, avec des épices à couscous et du sel."),
+    (6,30,"Quand ils sont dorés, les rajouter à la viande et prendre une louche de sauce de cuisson pour déglacer la sauteuse, remettre ce jus dans le plat de cuisson."),
+    (6,31,"La sauce ne doit pas être trop liquide et doit juste couvrir les légumes et la viande. Cuire à feu doux pendant 1/2 heure."),
+    (6,32,"Rajouter les pommes de terre coupées en deux si nécessaire, et vérifier l’assaisonnement"),
+    (6,33,"Au bout de 3/4 d’heure, dégraisser la sauce et servir avec un hachis de persil frais."),
+    
+    (7,34,"Dérouler et couper en deux la pâte feuilletée. Badigeonner une face avec l'oeuf battu et recouvrir avec la seconde partie de la pâte."),
+    (7,35,"Bien aplatir à l'aide d'un rouleau. Couper de nouveau en deux, badigeonner une partie avec l'oeuf et recouvrir de l'autre partie. Répéter l'opération trois fois."),
+    (7,36,"A l'aide de 2 emporte-pièce ronds de tailles différentes, former les cronuts. Dans une friteuse avec de l'huile végétale chauffer à 170°C (thermostat 5-6), plonger les anneaux de pâte et les retourner à mi-cuisson (environ 3 minutes)."),
+    (7,37,"Déposer les cronuts sur du papier absorbant pour les laisser refroidir. Pour garnir les cronuts, faire des trous dans les cronuts et fourrer de crème à l'aide d'une poche à douille."),
+    (7,38,"Cacher les trous avec le glaçage.Préparation de la crème pâtissière.Mélanger les jaunes d'oeuf avec le sucre. Battre au fouet jusqu'à ce que le mélange blanchisse."),
+    (7,39,"Ajouter la farine et bien mélanger avec le mélange sucre/oeufs. Ajouter 1/2 verre de lait pour que le mélange soit plus liquide. Mettre à chauffer le lait. Lorsque le lait est tiède (au bout de 3-4 min) ajouter le mélange oeufs/farine/sucre/lait."),
+    (7,40,"Ajouter la gousse de vanille.Mélanger au fouet jusqu'à ébullition.Lorsque la crème est bien épaisse, stopper la cuisson. Préparation du glaçage. Mélanger le sucre glace et le jus de citron."),
+    
+    (8,41,"Faire chauffer l'huile dans une sauteuse. Y jeter le riz et le laisser devenir transparent puis doré, en remuant avec une spatule."),
+    (8,42,"Saler, poivrer et verser le bouillon."),
+    (8,43,"Faire bouillir puis couvrir et baisser le feu au minimum."),
+    (8,44,"Laisser cuire ainsi environ 20 min."),
+    
+    (9,45,"Préchauffer le four à 180°C (thermostat 6)."),
+    (9,46,"Couper les olives en rondelles."),
+    (9,47,"Verser les oeufs dans la farine et mélanger."),
+    (9,48,"Ajouter le lait et l'huile puis mélanger."),
+    (9,49,"Ajouter le jambon, les olives et le gruyère puis mélanger."),
+    (9,50,"Ajouter la levure et, pour ne pas changer, mélanger."),
+    (9,51,"Mettre le tout dans un plat à cake au préalable beurré et placer au four 45 min."),
+    
+    (10,52,"Préparation de la génoise : préchauffer votre four à 180°C (thermostat 6). Dans un saladier casser les oeufs et ajouter le sucre. Battre au fouet électrique jusqu'à ce que le mélange ait triplé de volume soit environ 5 min."),
+    (10,53,"Ajouter ensuite la farine, la levure puis le beurre fondu. Verser dans un moule de 20 cm de diamètre (un moule à soufflé par exemple) et cuire 25 min."),
+    (10,54,"Attention, ne pas ouvrir la porte du four pendant la cuisson. Si la pâte retombe un peu au milieu, ce n'est pas bien grave, on peut rattraper le coup ! La génoise doit avoir une jolie couleur dorée."),
+    (10,55,"Laisser refroidir à température ambiante."),
+    (10,56,"Préparation de la garniture : monter la crème en chantilly dans un saladier préalablement mis au congélateur. Quand elle commence à monter, incorporer le sucre glace."),
+    (10,57,"La crème est prête quand la surface fait de belle vagues qui tiennent. Couper la génoise en deux. Imbiber la génoise du dessous avec le kirsh puis la tartiner de coulis de framboise, rajouter les 2/3 des framboises fraîches puis couvrir de chantilly."),
+    (10,58,"Disposer le second rond de génoise sur la préparation."),
+    (10,59,"Remettre une couche de coulis puis le reste de la chantilly en en mettant également sur tout le pourtour du gâteau."),
+    (10,60,"Mettre délicatement des amandes sur le pourtour du gâteau, elles vont tenir collées à la chantilly."),
+    (10,61,"Terminer en disposant joliment le reste des framboises."),
+    (10,62,"Garder au frais avant de servir."),
+    
+    (11,63,"Préchauffer le four à 180°C (thermostat 6). Faire fondre le chocolat dans une casserole. Hors du feu, ajouter le beurre,la farine et la levure."),
+	(11,64,"Fouetter les jaunes d’oeuf avec le sucre et un peu d'eau pour faire mousser, puis l'ajouter à la préparation chocolatée."),
+	(11,65,"Battre les blancs en neige et les incorporer dans la casserole tout doucement."),
+	(11,66,"Verser le tout dans un moule beurré à bords hauts et enfourner pendant environ 35 minutes."),
+	(11,67,"On peut ajouter du sucre glace ou du chocolat fondu, pour décorer le dessus du gâteau."),
+    (11,68,"Déguster"),
+    
+    (12,69,"Préparer les croque-monsieurs en alternant pain de mie, beurre, jambon, tranche de mozzarella et pain de mie.Découper les croque-monsieur en 4."),
+    (12,70,"Enfiler les quarts de croque-monsieur sur un pic en bois."),
+    (12,71,"Tremper les brochettes dans l'oeuf battu puis dans la chapelure."),
+    (12,72,"Cuire dans une casserole avec de l'huile."),
+    (12,73,"Déposer sur du papier absorbant avant de servir bien chaud."),
+    
+    (13,74,"Préparez la pâte à pizza. Attendez au moins 15 min pour qu'elle lève, elle sera plus facile à travailler. Etalez la pâte sur une plaque graissée à l'huile d'olive, puis recouvrez-la d'une fine couche de crème fraîche."),
+    (13,75,"Disposez les tranches de saumon, de façon à ce qu'elles recouvrent toute la pâte."),
+    (13,76,"Arrosez de 2 cuillères à soupe d'huile d'olive, saupoudrez d'origan et de quelques zestes de citron."),
+    (13,77,"Enfin, coupez la mozzarella en tranches moyennes pour en recouvrir la pizza; vous pouvez décorer avec quelques tranches de citron."),
+    (13,78,"Enfournez dans un four préchauffé à 180°C (th 6)."),
+    (13,79,"Facultatif : cassez des oeufs 5 min avant la fin de la cuisson et remettez au four quelques minutes."),
+    
+    (14,80,"Faites chauffez et huilez votre poêle."),
+    (14,81,"Mélangez un à un les ingrédients de la recette en suivant l'ordre ci dessus."),
+    (14,82,"Faites cuire vos crêpes à feu très doux."),
+    (14,83,"Et n'oubliez pas de huilez votre poêle toutes les 3 crêpes."),
+    (14,84,"Bonne dégustation"),
+    
+    (15,85,"Émincez les blancs de poulet, placez-les dans un plat et versez le jus d'1/2 citron dessus, laissez mariner au minimum 4h au frigo."),
+    (15,86,"Réduisez 2 biscottes en miettes, ajoutez un peu d'épice aux biscottes écrasées, salez et poivrez. Dans une poêle anti-adhésive, ajoutez une noix de beurre."),
+    (15,87,"Panez chaque blanc de poulet mariné dans la chapelure aux épices et mettez-les dans la poêle chaude."),
+    (15,88,"Laissez cuire environ 8 à 10 min jusqu'à ce que les aiguillettes de poulet soient cuites. Dressez les assiettes individuellement ou mettez tous les ingrédients dans un plat. Comptez 2 biscottes par personne (1 biscotte si le plat est une entrée). Vous pouvez frotter les biscottes avec un peu d'ail."),
+    (15,89,"Mélangez la salade, les biscottes brisées en morceaux, l'échalote émincée, le parmesan en copeaux et le poulet. Dans un bol préparez la sauce avec la crème fraiche, la moutarde, le jus de citron, un peu de parmesan et un peu de vinaigre balsamique (facultatif). Salez et poivrez."),
+    (15,90,"Servez en entrée ou en plat unique pour un repas light."),
+    
+    (16,91,"Travailler le beurre en pommade. Ajouter le sucre et travailler le mélange jusqu'à l'obtention d'une crème homogène. Ajouter l'oeuf jusqu'à totale incorporation."),
+    (16,92,"Ajouter la farine et la levure. Hacher le chocolat grossièrement ou finement selon votre convenance et l'ajouter à la pâte. Préchauffer le four à 180°C (thermostat 6)."),
+    (16,93,"Garnir des moules à muffin en laissant un creux au milieu. Enfourner pour 20 minutes. A mi-cuisson, tasser le centre des shots pour qu'ils gardent leur forme"),
+    (16,94,"A la sortie du four, tasser à nouveau le centre des shots. Attendre le total refroidissement avant de démouler."),
+    (16,95,"Garnir selon l'envie. Si la garniture est liquide tapisser l'intérieur des shots avec du chocolat fondu et laisser figer."),
+    
+    (17,96,"Lavez, séchez,ciselez la ciboulette et la coriandre, émincez le piment, coupez le citron vert en 4 dans le sens de la longueur et mettez-les en attente dans des coupelles."),
+    (17,97,"Portez à ébullition, le bouillon de boeuf, ajoutez-y l'étoile de badiane, et le morceau de gingembre pelé et émincé. Couvrez et laissez cuire doucement pendant 12 min."),
+    (17,98,"Détaillez le boeuf en fine lamelles, aites cuire les nouilles de riz dans de l'eau bouillante salée, respectez les indications sur le paquet."),
+    (17,99,"Dans 4 grands bols versez 1 cuillerée à soupe de sauce Nuoc-mâm, egouttezles nouilles de riz,répartissez-les dans les bols, posez les lamelles de boeuf, et versez le bouillon de boeuf brûlant, parsemez de ciboulette et de corinadre. Servez aussitôt."),
+    (17,100,"Chacun ajoutera à son goût, citron vert,et piment. Bon appétit"),
+    
+    (18,101,"Malaxez avec les doigts la farine, le beurre et la cassonade."),
+    (18,102,"Lavez et coupez la rhubarbe en tronçons et la pomme en morceaux. Placez les fruits dans un plat à gratin ou dans un moule transparent et les saupoudrer de sucre vanillé."),
+    (18,103,"Egrenez le crumble sur les fruits."),
+    (18,104,"Enfournez à 210°C pendant 25 à 30 mn."),
+    
+    (19,105,"Couper finement les oignons, les faire revenir dans une sauteuse avec l'huile d'olive. Couper en tranches très fines les poivrons, les rajouter dans la sauteuse. Couper en tranches les tomates et les mettre aussi dans la sauteuse. Salez, poivrez. Couvrir. Faîtes mijoter le tout. Rajouter un peu d'huile d'olive durant la cuisson si vous le souhaitez."),
+    (19,106,"Dans une autre poêle, faites revenir vos merguez. Une fois cuites, coupez vos mergues en 4, les mettre avec les légumes. Laissez mijoter à feu doux, histoire de parfumer vos légumes du jus des merguez... (c'est pour cela qu'il n'est pas nécessaire d'utiliser un piment dans la recette)."),
+    (19,107,"Une fois le tout cuit, rajouter la coriandre. Cela ressemble à une ratatouille ou piperade. Vous pouvez rajouter sur le tout un oeuf par personne..."),
+    (19,108,"C'est délicieux ! Bon appétit !"),
+    
+    (20,109,"Faire fondre le beurre puis l'ajouter au sucre dans un saladier. Bien remuer."),
+    (20,110,"Ajouter les œufs puis la farine, le bicarbonate et la levure. Bien mélanger le tout pour éviter les grumeaux."),
+    (20,111,"Incorporer le lait et la vanille."),
+    (20,112,"Remplir les moules à cupcakes aux 3/4. (En cas de moules papier : les disposer dans un ramequin ou autre pour éviter qu'ils ne s’aplatissent.)"),
+    (20,113,"Enfourner pendant 20 min à 200°C (thermostat 6), puis laisser refroidir sans démouler."),
+    (20,114,"Quand les cupcakes sont bien refroidis, préparer la crème beurre : battre avec un fouet (électrique ou non) pendant 3 à 5 min, le beurre mou et le sucre glace."),
+    (20,115,"Ajouter du lait + ou - selon la consistance. La crème ne doit pas être trop liquide ni trop compacte afin d'avoir la consistance idéale pour la poche à douille."),
+    (20,116,"Décorer vos cupcakes avec la crème au beurre et une poche à douille (pour faire plus joli) : Astuce, si vous n'avez pas de poche à douille, prenez un petit sachet de congélation dont vous aurez coupé un tout petit peu de l'un de ses coins !"),
+    (20,117,"Bonne dégustation !"),
+    
+    (21,118,"Préparer la panna cotta : Faire ramollir les feuilles de gélatine dans un bol d'eau froide. Mettre la crème, le sucre et la vanille dans une casserole et faire frémir. Dès le début de l'ébullition, retirer la casserole du feu et ajouter les feuilles de gélatine après les avoir pressées pour qu'il ne reste plus d'eau. Bien remuer avec un fouet et verser la panna cotta dans six coupelles. Laisser prendre à température ambiante, puis les placer au réfrigérateur 2 heures au minimum."),
+    (21,119,"Préparer la gelée à la rose : Faire ramollir les feuilles de gélatine dans un bol d'eau froide. Mettre 30 cl d'eau et le sucre dans une casserole et porter à ébullition. Hors du feu, ajouter les feuilles de gélatine bien essorées et remuer jusqu'à ce qu'elles soient dissoutes. Verser le colorant rouge, l'eau de rose et bien mélanger le tout. Laisser un peu refroidir, puis verser délicatement la préparation sur les panna cotta. Laisser refroidir et mettre au réfrigérateur jusqu'à ce que la gelée soit bien prise."),
+    (21,120,"Au moment de servir, décorer avec quelques pétales de rose."),
+    
+    (22,121,"Dans un saladier, verser le yaourt, les 2 sucres, la farine, la levure, l'huile, les oeufs; puis le rhum. Mélanger au fouet, de façon à ce que ce soit bien lisse."),
+    (22,122,"Tapisser le fond d'un moule à cake avec le papier sulfurisé ou le beurre, y verser la préparation."),
+    (22,123,"Enfourner pendant 30 à 45 min, à 180°C (Th 6); c'est cuit quand la lame du couteau ressort sèche!"),
+    
+    (23,124,"Placer la pâte dans un moule et la piquer avec une fourchette. Badigeonner le fond avec de la moutarde"),
+    (23,125,"Écraser le thon puis le placer sur la pâte."),
+    (23,126,"Couper les tomates en tranches et les placer sur le thon."),
+    (23,127,"Mélanger les œufs, la crème et le lait (et du gruyère selon les goûts), avec sel et poivre, puis verser sur la pâte (ça doit recouvrir le thon et les tomates)."),
+    (23,128,"Recouvrir le tout de gruyère...."),
+    (23,129,"Cuire au four à 200°C pendant 20 à 25 min."),
+    
+    (24,130,"Emincer l'oignon et détailler le chorizo pelé en rondelles."),
+    (24,131,"Découper le veau en morceaux."),
+    (24,132,"Faire revenir veau et oignons émincés jusqu'à coloration dans l'huile."),
+    (24,133,"Ajouter le chorizo puis la pulpe de tomate, le basilic haché et enfin les olives."),
+    (24,134,"Couvrir et faire mijoter à feu doux 1 heure minimum."),
+    (24,135,"Ce plat est encore meilleur préparé la veille et réchauffé le jour même."),
+    
+    (25,136,"Faire chauffer de l'eau, verser 1 petit verre d'eau bouillante sur 2 cuillères à café de thé vert."),
+    (25,137,"Après une minute, jeter le liquide, garder le thé. (c'est pour enlever la première amertume du thé), puis verser le reste de l'eau (il faut avoir une petite théière, équipée idéalement d'un filtre dans le bec verseur, c'est + facile)."),
+    (25,138,"Ajouter ensuite la menthe fraîche, en noyant tout de suite les feuilles dans l'eau (si elles surnagent, elles prennent un goût de brûlé, un peu amer -avec l'habitude, vous le reconnaîtrez- c'est pour les marocains quand le thé est brûlé)."),
+    (25,139,"Par dessus, ajouter les sucres (au moins 25-30 sucres pour 4-5 verres). Pour mélanger.On verse dans les verres en tenant la théière bien haut pour faire 'mousser' le sucre... et on boit très chaud.///"),
+    
+    (26,140,"Dans un mixeur, mettre les fraises, le sucre et le jus de citron. Mixer et ajouter l'eau au fur et à mesure."),
+    (26,141,"Passer au chinois étamine pour éliminer les pépins."),
+    (26,142,"C'est prêt, bon appétit."),
+    
+    (27,143,"Mettre dans un mixer les bananes coupées en morceaux et la chair des kiwis."),
+    (27,144,"Presser les oranges et rajouter le jus dans le mixer."),
+    (27,145,"Rajouter le lait de soja (il peut être nature ou vanillé)."),
+    
+    (28,146,"Battre grossièrement l'oeuf et le sucre dans un saladier. Y rajouter le beurre fondu ou l'huile."),
+    (28,147,"Mélanger à part la farine et la levure, puis en mélanger la moitié avec la préparation"),
+    (28,148,"Délayer progressivement avec le lait tout en rajoutant l'autre moitié de farine petit à petit (cela évitera de créer des grumeaux)."),
+    (28,149,"Aucun temps de repos n'est nécessaire, si ce n'est juste le temps de faire chauffer votre poêle à feu moyen. Huilez ou beurrez la poêle à l'aide de papier essuie-tout."),
+    (28,150,"A l'aide d'une petite louche ou d'une grosse cuillère à sauce, déposer des 'ronds' dans la poêle"),
+    (28,151,"Lorsque les bulles apparaissent et éclatent, retourner les pancakes et ne pas les laisser plus d'une min sur l'autre face."),
+    
+    (29,152,"Dans un peu d'huile, faire revenir l'oignon et l'ail émincé, les piments et les poivrons tranchés en lamelles."),
+    (29,153,"Lorsque l'oignon à pris une teinte blanche, ajouter les tomates en morceaux, le poulet, le laurier, le thym et le persil."),
+    (29,154,"Saler et poivrer. Laisser mijoter à couvert environ 40 mn. Vérifier la cuisson du poulet, prolonger la cuisson si nécessaire."),
+    (29,155,"Cette recette s'accompagne de riz nature."),
+    
+    (30,156,"Faire fondre le beurre et le chocolat à feu doux, et ajouter le sucre."),
+    (30,157,"Bien battre les oeufs entiers, et les insérer ensuite dans le mélange au chocolat."),
+    (30,158,"Ajouter la farine et bien mélanger le tout. Verser dans un moule à gâteau beurré."),
+    (30,159,"Laisser cuire au four à 160°C (th 5-6), pendant 30 min environ."),
+    
+    (31,160,"Faire revenir la viande dans un peu de beurre doux jusqu'à ce que les morceaux soient un peu dorés."),
+    (31,161,"Saupoudrer de 2 cuillères de farine. Bien remuer."),
+    (31,162,"Ajouter 2 ou 3 verres d'eau, les cubes de bouillon, le vin et remuer. Ajouter de l'eau si nécessaire pour couvrir."),
+    (31,163,"Couper les carottes en rondelles et émincer les oignons puis les incorporer à la viande, ainsi que les champignons."),
+    (31,164,"Laisser mijoter à feu très doux environ 1h30 à 2h00 en remuant."),
+    (31,165,"Si nécessaire, ajouter de l'eau de temps en temps."),
+    (31,166,"Dans un bol, bien mélanger la crème fraîche, le jaune d’oeuf et le jus de citron. Ajouter ce mélange au dernier moment, bien remuer et servir tout de suite."),
+    
+    (32,167,"Rincez les fraises à l'eau fraîche avant de les équeuter. Détaillez les en deux ou en quatre suivant leur grosseur. Mettez les dans un saladier et saupoudrez-les d'un sachet de sucre vanillé. Réservez au frais."),
+    (32,168,"Montez la crème liquide en chantilly assez souple en y ayant incorporé le 2ème sachet de sucre vanillé. Ajoutez-y le mascarpone que vous aurez détendu à la cuillère préalablement. L'ensemble doit être souple mais assez épais."),
+    (32,169,"Disposez au fond de 4 quatre verres hauts une grosse cuillerée à soupe de mélange chantilly mascarpone. Déposez dessus une couche de fraises. Procédez ainsi par couches jusqu'à épuisement des ingrédients. Finissez par une noix de crème surmontée joliment d'une fraise pour décorer."),
+    (32,170,"Mettez au frais pendant au moins une heure."),
+    
+    (33,171,"Ecraser le fromage frais avec le poivre."),
+    (33,172,"Concasser les pistaches et les cacahuètes."),
+    (33,173,"Ciseler la ciboulette."),
+    (33,174,"Etaler du fromage frais en couche fine sur la moitié de chaque gressin avant de les parsemer de ciboulette, de pistaches et/ou de cacahuètes."),
+    (33,175,"A servir de suite."),
+    
+    (34,176,"Épluchez les carottes, sur la longueur de celles-ci à l'aide d'un conome."),
+    (34,177,"Une fois épluchées, continuez avec le même ustensile sur la moitié ou des tronçons plus petits, à votre envie..."),
+    (34,178,"En laissant le coeur pour une soupe, un bol de mayonnaise maison, une fringalle de dernière minute..."),
+    (34,179,"Les copeaux de carottes se trouvant au fond d'une assiette creuse, terminez en ajoutant sel, poivre, coriandre hachée, cumin en poudre et juste ce qu'il faut de vinaigre balsamique pour"),
+    (34,180,"Imbiber les carottes. Idéalement, elles ne doivent pas baigner car tout cela se sert avec des cure-dents."),
+    (34,181,"Piquer dedans à volonté !"),
+    
+    (35,182,"Faites cuire les pignons de pin à sec dans une poêle jusqu’à ce qu’ils soient dorés, saupoudrez de gros sel. Réservez et laissez-les refroidir. Portez de l’eau à ébullition dans une casserole."),
+    (35,183,"Une fois que l’eau frémit, placez les œufs de caille et laissez cuire 4 min. Égouttez et plongez les œufs dans l’eau froide pour stopper la cuisson et laissez-les refroidir."),
+    (35,184,"Pendant ce temps, préparez la chapelure. Hachez les pignons de pin très finement, jusqu’à l’obtention d’une poudre ayant la même consistance que la chapelure."),
+    (35,185,"Vous pouvez le faire soit à l’aide d’un mixeur , soit au couteau mais pour le mixeur, il est impératif que les pignons soient froid, sinon en les mixant, cela va créer une pâte plutôt qu’un 'chapelure'."),
+    (35,186,"Mélangez la poudre de pignons avec la chapelure . Écaillez les œufs de caille. Pour plus de facilité, faites-le dans l’eau, la coquille s’enlève beaucoup plus facilement."),
+    (35,187,"Piquez vos œufs de caille, trempez-les dans l’huile puis passez-les dans la préparation chapelure/pignons."),
+    
+    (36,188,"Ne dégraissez pas la viande. Coupez-la en cubes de 3 cm et mettez-la dans un récipient avec l'oignon, le paprika, le cumin, le persil et l'huile d'olive. Poivrez. Remuez la viande pour l'enrober de sauce, couvrez et laissez mariner 2 heures au réfrigérateur."),
+    (36,189,"Piquez la viande sur des brochettes et faites la cuire environ 6 minutes au barbecue, en les retournant et en les badigeonnant de marinade."),
+    
+    (37,190,"Faire préchauffer votre four à 200°C (thermostat 7). Laver et éplucher les pommes de terre. Les découper en fins bâtonnets afin d'en faire des frites."),
+    (37,191,"Dans une plaque de four tapissée de papier sulfurisé, disposer vos frites, les saler, les huiler et les faire cuire au four 40 minutes à 180°C"),
+    (37,192,"Pendant ce temps, découper les steaks hachés en petits morceaux, les faire cuire dans une poêle."),
+    (37,193,"Dans une casserole, faire chauffer 50 cl de crème. Ajouter en 2 fois les 100g de fromage rappé tout en fouettant continuellement afin d'éviter la formation de grumeaux. Poivrer et saler."),
+    (37,194,"Une fois que tout est cuit et la sauce fromagère prête, disposer 2 tortillas en les faisant se chevaucher. Répartir la viande et les frites en 5 portions pour les 5 tacos."),
+    (37,195,"Assaisonner vos tortillas avec la sauce et recouvrir de cuillères de sauce fromagère."),
+    (37,196,"Plier les tortillas en commençant par les longueurs puis replier par dessus les largeurs."),
+    (37,197,"Placer le tout dans un grill chaud pendant 5 minutes."),
+    
+    (38,198,"Emincer l'oignon et le faire dorer avec un peu de beurre."),
+    (38,199,"Rajouter les champignons égouttés puis le vin blanc et porter à ébullition."),
+    (38,200,"Ajouter ensuite la crème, le bouquet garni, le sel et le poivre."),
+    (38,201,"Mélanger et laisser un peu réduire."),
+    (38,202,"Rincer les filets de poisson, les éponger puis les passer dans la farine (en éliminant l'excédent)."),
+    (38,203,"Ajouter les filets dans la cocotte et baisser le feu. Faire cuire 20 mn."),
+    
+    (39,204,"Disposez les filets dans un plat beurré. Salez et poivrez légèrement."),
+    (39,205,"Enfournez 10 mn dans un four préchauffé à thermostat 7 (210°C)."),
+    (39,206,"Videz l'eau rendue."),
+    (39,207,"Nappez du mélange crème, moutarde et cornichons. Remettez à cuire 10 mn"),
+    
+    (40,208,"Faire revenir les oignons coupés fin dans une grande poêle antiadhésive."),
+    (40,209,"Ajouter les filets de poisson roulés sur eux-mêmes, les faire revenir doucement 5 à 6 minutes. Saler et poivrer."),
+    (40,210,"Ajouter les tomates coupées en petits dés. Cuire à feu doux 5 minutes."),
+    (40,211,"Ajouter le lait de coco et le curcuma (facultatif). Laisser mijoter doucement 10 à 15 minutes sans remuer."),
+    
+    (41,212,"Râpez les carottes, émincez les poireaux finement."),
+    (41,213,"Dans un plat à four beurré, alternez les légumes en couches, disposez quelques noisettes de beurre dessus, salez et poivrez."),
+    (41,214,"Faites cuire 25 min au four à 180°C (thermostat 6)."),
+    (41,215,"Nappez les légumes de crème fraîche, posez les filets de poissons sur le tout."),
+    (41,216,"Remettre quelques noisettes de beurre, du jus de citron et enfourner pour 15 min."),
+    
+    (42,217,"Dans un saladier, fouetter la crème, un citron, les gousses d'ail écrasées, le safran, la pâte de piment, le sel et le poivre."),
+    (42,218,"Bien mélanger."),
+    (42,219,"Couper les filets de poisson en gros cubes. Placer le poisson dans le saladier, l'enrober de sauce, et le couvrir d'un film."),
+    (42,220,"Laisser mariner au moins 3 h. Après 3 h : égoutter les cubes de poisson."),
+    (42,221,"Les alterner sur 4 piques à brochettes métalliques, et les ranger dans un plat. Passer sous le grill du four 8 min, en les retournant."),
+    (42,222,"Réserver au chaud."),
+    (42,223,"Verser le reste de la marinade et le jus du 2ème citron dans le plat. Chauffer 3 min. Napper les brochettes."),
+    
+    (43,224,"Laver et découper le poivron en petits dés. Eplucher l'oignon et le hacher grossièrement. Déposer le tout dans un plat allant au four préalablement huilé. Faites-les griller au four 20 à 25 mn Th 6-7."),
+    (43,225,"Pendant ce temps, préparer dans un bol le mélange crème fraîche, vin blanc, herbes de Provence, sel et poivre."),
+    (43,226,"Une fois les poivrons et les oignons grillés, déposer le mélange dessus (crème, vin etc...)."),
+    (43,227,"Ensuite déposer les filets de poissons préalablement salés et poivrés dans le plat. Arroser d'un filet d'huile d'olive."),
+    (43,228,"Laisser cuire 20 à 25 mn Th 6 ."),
+    (43,229,"Servir avec du riz."),
+    
+    (44,230,"Couper le poisson en dés, réserver au réfrigérateur."),
+    (44,231,"Faire chauffer l'huile dans une poêle. Emincer l'oignon, et le faire revenir dans l'huile."),
+    (44,232,"Piler (ou mixer )l'ail et le gingembre ensemble, et les ajouter à l'oignon, quand celui-ci est légèrement doré. Mélanger."),
+    (44,233,"Ajouter la sauce soja, le lait de coco, et le jus du 1/2 citron, puis le poisson coupé en dés."),
+    (44,234,"Laisser cuire 10 min environ, à feu doux."),
+    (44,235,"Rectifier l'assaisonnement, et servir chaud."),
+    
+    (45,236,"Faites cuire les filets de poisson à couvert 2 min au micro-ondes. Emiettez-les. Hachez les oignons et faites-les fondre doucement à la poêle dans un peu de matière grasse."),
+    (45,237,"Ajoutez les filets de poisson coupés en petits morceaux, écrasez un peu."),
+    (45,238,"Saupoudrez de farine, puis ajoutez le verre de lait, et laissez cuire une dizaine de minutes en écrasant le poisson."),
+    (45,239,"Dans un plat beurré, étalez successivement une couche de purée, une couche de poisson et finir par la purée."),
+    (45,240,"Saupoudrez de fromage et enfournez à 200°C (thermostat 6-7) pendant 20 min pour gratiner."),
+    
+    (46,241,"Couper les poireaux finement en petits tronçons, ainsi que l'échalote."),
+    (46,242,"Dans une sauteuse ou un wok, mettre une bonne cuillère à soupe d'huile d'olive et les faire étuver jusqu'à ce qu'il brunissent un peu."),
+    (46,243,"Verser la crème, qui doit couvrir autant que possible le poisson et les poireaux."),
+    (46,244,"Assaisonner d'une bonne pincée d'épices, saler et poivrer."),
+    (46,245,"Dans un plat allant au four, verser un 1/4 de cette préparation. Y placer le poisson et recouvrir avec le reste."),
+    (46,246,"Saupoudrer de chapelure et cuire à four chaud (thermostat 7/210°C) 1/2 heure."),
+    
+    (47,247,"Mélanger l'édulcorant ou le sucre avec le yaourt, ajouter les oeufs, mélanger bien."),
+    (47,248,"Puis verser l'huile."),
+    (47,249,"Mettre la farine et la levure."),
+    (47,250,"Et le sucre vanillé puis mélanger bien."),
+    (47,251,"Çà fait une pâte pas trop liquide."),
+    (47,252,"Thermostat sur 4 (120°C) pendant 40 min."),
+    
+    (48,253,"Préchauffer le four à 180°C (thermostat 6)."),
+    (48,254,"Mélanger les oeufs avec la crème et le lait."),
+    (48,255,"Ajouter les herbes ciselées, saler, poivrer et bien mélanger. Couper le pain en tranches épaisses."),
+    (48,256,"Tremper les tranches de pain dans la préparation, le pain doit être bien imbibé."),
+    (48,257,"Déposer les tranches de pain imbibés au fond d'un plat à gratin beurré, parsemer de tranches de jambon coupées en lanières et couvrir de tranches de mozzarella."),
+    (48,258,"Verser la préparation crémeuse restante dans le plat et enfourner 25 minutes."),
+    (48,259,"Laisser tiédir avant de servir."),
+    
+    (49,260,"Emincer l'oignon et détailler le chorizo pelé en rondelles."),
+    (49,261,"Découper le veau en morceaux."),
+    (49,262,"Faire revenir veau et oignons émincés jusqu'à coloration dans l'huile."),
+    (49,263,"Ajouter le chorizo puis la pulpe de tomate, le basilic haché et enfin les olives."),
+    (49,264,"Couvrir et faire mijoter à feu doux 1 heure minimum."),
+    (49,265,"Ce plat est encore meilleur préparé la veille et réchauffé le jour même."),
+    
+    (50,266,"Préchauffer le four à 180°C (thermostat 6)."),
+    (50,267,"Dans un saladier, mélanger la farine, le sel et la levure."),
+    (50,268,"Dans un autre saladier, battre les oeufs, ajouter le sucre et le sucre vanillé."),
+    (50,269,"Faire fondre le beurre, puis l'ajouter au second saladier tout en remuant. Ajouter le lait et le premier mélange."),
+    (50,270,"Verser le chocolat amer."),
+    (50,271,"Beurrer les moules, et les remplir au 2/3. Enfoncer un carré de chocolat blanc dans les plats."),
+    (50,272,"Mettre les muffins à cuire 15 minutes à 180°C (thermostat 6).");
+    
+    
+insert into allergies (id_allergies, nom_allergies)
+values
+	(0,""),
+    (1,"fruits"),
+    (2,"légumes"),
+    (3,"arachide"),
+    (4,"fruit à coque"),
+    (5,"gluten"),
+    (6,"protéine de vache"),
+    (7,"soja"),
+    (8,"oeufs"),
+    (9,"sésame "),
+    (10,"lait de vache");
+    
+
+insert into ingredients_type_explication(id_type_aliment,id_ingredient)
+values
+	(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),
+    (1,20),(1,21),(1,22),(1,23),(1,24),(1,25),(1,26),(1,27),(1,28),(1,29),(1,30),(1,31),(1,32),(1,33),(1,34),(1,35),(1,36),(1,37),(1,38),(1,39),
+	(1,40),(1,41),(1,42),(1,43),(1,44),(1,45),(1,46),(1,47),(1,48),(1,49),(1,50),(1,51),(1,52),
+    
+	(2,101),(2,102),(2,103),(2,104),(2,105),(2,106),(2,107),(2,108),(2,109),(2,110),(2,111),(2,112),(2,113),(2,114),(2,115),(2,116),(2,117),(2,118),(2,119),
+    (2,120),(2,121),(2,122),(2,123),(2,124),(2,125),(2,126),(2,127),(2,128),(2,129),(2,130),(2,131),(2,132),(2,133),(2,134),(2,135),(2,136),(2,137),(2,138),(2,139),
+	(2,140),(2,141),(2,142),(2,143),(2,144),(2,145),(2,146),(2,147),(2,148),(2,149),(2,150),(2,151),(2,152),(2,153),(2,154),(2,155),(2,156),(2,157),(2,158),(2,159),
+    
+    (3,201),(3,202),(3,203),(3,204),(3,205),(3,206),(3,207),(3,208),(3,209),(3,210),(3,211),(3,212),(3,213),(3,214),(3,215),(3,216),(3,217),(3,218),(3,219),
+    (3,220),(3,221),(3,222),(3,223),(3,224),(3,225),(3,226),(3,227),(3,228),(3,229),(3,230),(3,231),(3,232),(3,233),(3,234),(3,235),(3,236),(3,237),(3,238),(3,239),
+	(3,240),(3,241),(3,242),(3,243),(3,244),(3,245),(3,246),(3,247),(3,248),(3,249),(3,250),(3,251),(3,252),(3,253),(3,254),(3,255),(3,256),(3,257),(3,258),(3,259),
+    (3,260),(3,261),(3,262),(3,263),(3,264),(3,265),(3,266),(3,267),(3,268),(3,269),
+    
+    (4,301),(4,302),(4,303),(4,304),(4,305),(4,306),(4,307),(4,308),(4,309),(4,310),(4,311),(4,312),(4,313),(4,314),(4,315),(4,316),(4,317),(4,318),(4,319),
+    (4,320),(4,321),(4,322),(4,323),(4,324),(4,325),(4,326),
+    
+    (5,401),(5,402),(5,403),(5,404),(5,405),(5,406),(5,407),(5,408),(5,409),(5,410),(5,411),(5,412),(5,413),(5,414),(5,415),(5,416),(5,417),(5,418),(5,419),
+    (5,420),(5,421),(5,422),(5,423),(5,424),(5,425),(5,426),(5,427),(5,428),(5,429),(5,430),(5,431),(5,432),(5,433),(5,434),(5,435),(5,436),(5,437),(5,438),(5,439),
+	(5,440),(5,441),(5,442),
+    
+    (6,501),(6,502),(6,503),(6,504),(6,505),(6,506),(6,507),(6,508),(6,509),(6,510),(6,511),(6,512),(6,513),(6,514),(6,515),(6,516),(6,517),(6,518),(6,519),
+    (6,520),(6,521),(6,522),(6,523),(6,524),(6,525),(6,526),(6,527),(6,528),(6,529),(6,530),(6,531),(6,532),
+    
+    (7,601),(7,602),(7,603),(7,604),(7,605),(7,606),(7,607),(7,608),(7,609),(7,610),(7,611),(7,612),(7,613),(7,614),
+    
+    (8,701),(8,702),(8,703),(8,704),(8,705),(8,706),(8,707),(8,708),(8,709),(8,710),(8,711),(8,712),(8,713),(8,714),(8,715),
+    
+	(9,801),(9,802),(9,803),(9,804),(9,805),(9,806),(9,807),(9,808),(9,809),(9,810),(9,811),(9,812),(9,813),(9,814),(9,815),(9,816),(9,817),(9,818),(9,819),
+    (9,820),(9,821),(9,822),(9,823),(9,824),(9,825),(9,826),(9,827),(9,828),(9,829),(9,830),(9,831),(9,832),(9,833),(9,834),(9,835),(9,836),(9,837),(9,838),(9,839),
+	(9,840),(9,841),(9,842),(9,843),(9,844),(9,845),(9,846),(9,847),(9,848),(9,849),(9,850),(9,851),(9,852),(9,853),(9,854),(9,855),(9,856),(9,857),(9,858),(9,859),(9,860);
+    
+insert into ingredient_allergies(id_allergies, id_ingredient)
+values
+
+	(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),
+    (1,20),(1,21),(1,22),(1,23),(1,24),(1,25),(1,26),(1,27),(1,28),(1,29),(1,30),(1,31),(1,32),(1,33),(1,34),(1,35),(1,36),(1,37),(1,38),(1,39),
+	(1,40),(1,41),(1,42),(1,43),(1,44),(1,45),(1,46),(1,47),(1,48),(1,49),(1,50),(1,51),(1,52),
+    
+    (2,101),(2,102),(2,103),(2,104),(2,105),(2,106),(2,107),(2,108),(2,109),(2,110),(2,111),(2,112),(2,113),(2,114),(2,115),(2,116),(2,117),(2,118),(2,119),
+    (2,120),(2,121),(2,122),(2,123),(2,124),(2,125),(2,126),(2,127),(2,128),(2,129),(2,130),(2,131),(2,132),(2,133),(2,134),(2,135),(2,136),(2,137),(2,138),(2,139),
+	(2,140),(2,141),(2,142),(2,143),(2,144),(2,145),(2,146),(2,147),(2,148),(2,149),(2,150),(2,151),(2,152),(2,153),(2,154),(2,155),(2,156),(2,157),(2,158),(2,159),
+    
+    (3,701), (3,51),
+	
+    (4,3),(4,34),(4,35),(4,50),(4,408),
+    
+    (5,404),(5,433),(5,418),(5,410),
+    
+    (6,501),(6,502),(6,503),(6,504),(6,505),(6,506),(6,507),(6,508),(6,509),(6,510),(6,511),(6,512),(6,513),(6,516),(6,517),(6,518),(6,519),
+    (6,521),(6,522),(6,523),(6,524),(6,526),(6,527),(6,528),(6,530),(6,531),
+    
+    (7,414),(7,525),(7,821),
+    (8,514),(8,515),(8,532),
+    (9,712);
+    
